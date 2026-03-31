@@ -2,15 +2,12 @@ const LAMBDA_URL_GEN = "https://x0ht8akouf.execute-api.sa-east-1.amazonaws.com/v
 
 async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCallback) {
     try {
-        // 1. Chamada para a Lambda. 
-        // Usamos POST porque seu teste indicou que a Lambda espera um 'body'
+        // MUDANÇA CRUCIAL: Usamos GET para evitar o bloqueio de CORS (Preflight)
         const response = await fetch(LAMBDA_URL_GEN, { 
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ action: "get_url" }) 
+            method: 'GET',
+            mode: 'cors'
         });
 
-        // Se a resposta não for 200, paramos aqui para evitar o erro de JSON "undefined"
         if (!response.ok) {
             const errorText = await response.text();
             throw new Error(`Erro na API (${response.status}): ${errorText}`);
@@ -18,7 +15,7 @@ async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCal
 
         const data = await response.json();
         
-        // 2. Extração da URL (Lógica para Lambda Proxy Integration)
+        // Se a lambda retornar o objeto direto ou dentro de uma string 'body'
         let result = data;
         if (data.body && typeof data.body === 'string') {
             result = JSON.parse(data.body);
@@ -30,7 +27,6 @@ async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCal
             throw new Error("URL do WebSocket não encontrada no retorno da API.");
         }
 
-        // 3. Configuração do WebSocket
         const socket = new WebSocket(urlGigante);
         socket.binaryType = "arraybuffer";
 
@@ -56,7 +52,6 @@ async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCal
         return socket;
 
     } catch (err) {
-        // Esta linha evita o erro "undefined" mostrando o erro real no console
         console.error("Erro detalhado ao conectar Transcribe:", err.message);
         return null;
     }
