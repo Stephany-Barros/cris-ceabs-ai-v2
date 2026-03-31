@@ -1,0 +1,88 @@
+:root {
+    --primary: #002d5e;   /* Azul Marinho CEABS */
+    --secondary: #ff8c00; /* Laranja CEABS */
+    --bg: #f4f7f6;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    text-align: center;
+    width: 380px;
+}
+
+.logo {
+    font-weight: 800;
+    font-size: 1.6rem;
+    color: var(--primary);
+    margin-bottom: 2rem;
+    letter-spacing: -1px;
+}
+
+.btn-mic {
+    background: var(--primary);
+    border: none;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    font-size: 2.2rem;
+    color: white;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 6px 20px rgba(0,45,94,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.btn-mic.active {
+    background: #e74c3c; /* Vermelho quando grava */
+    transform: scale(1.15);
+    box-shadow: 0 0 25px rgba(231, 76, 60, 0.6);
+}
+
+#status {
+    margin-top: 1.5rem;
+    font-size: 0.85rem;
+    color: #888;
+    font-weight: 500;
+}
+
+.chat-box {
+    margin-top: 2.5rem;
+    text-align: left;
+}
+
+.label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #999;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.text-output {
+    background: #fdfdfd;
+    padding: 12px 15px;
+    border-radius: 12px;
+    min-height: 45px;
+    margin-bottom: 18px;
+    font-size: 0.95rem;
+    color: #333;
+    border: 1px solid #eee;
+    border-left: 5px solid var(--secondary);
+}
