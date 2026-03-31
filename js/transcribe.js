@@ -1,4 +1,4 @@
-const LAMBDA_URL_GEN = "https://x0ht8akouf.execute-api.sa-east-1.amazonaws.com/";
+const LAMBDA_URL_GEN = "https://x0ht8akouf.execute-api.sa-east-1.amazonaws.com/v2";
 
 async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCallback) {
     try {
