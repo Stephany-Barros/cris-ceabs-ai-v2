@@ -2,24 +2,71 @@ const LAMBDA_URL_GEN = "https://x0ht8akouf.execute-api.sa-east-1.amazonaws.com/"
 
 async function getTranscribeSocket(onMessageCallback, onOpenCallback, onCloseCallback) {
     try {
-        // 1. Alteramos para GET (ou garantimos que a rota aceite POST)
-        // Se no navegador o link direto funciona, use GET aqui também.
-        const response = await fetch(LAMBDA_URL_GEN, { method: 'GET' }); 
-        
-        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+        // 1. Chamada para a Lambda enviando um body inicial para evitar erro no Python
+        const response = await fetch(LAMBDA_URL_GEN, { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ action: "generate_presigned_url" }) 
+        });
 
-        // 2. A CORREÇÃO CRITICAL:
-        // O seu teste de sucesso mostrou que a Lambda já retorna o JSON estruturado.
-        // Não use JSON.parse(data.body) se o data já contiver os campos.
-        const data = await response.json();
-
-        // Verificamos se o websocketUrl está na raiz do retorno ou dentro de body
-        const websocketUrl = data.websocketUrl || (data.body ? JSON.parse(data.body).websocketUrl : null);
-
-        if (!websocketUrl) {
-            console.error("Resposta da API:", data);
-            throw new Error("URL do WebSocket não encontrada na resposta");
+        if (!response.ok) {
+            throw new Error(`Erro na API Gateway: ${response.status}`);
         }
 
-        const socket = new WebSocket(websocketUrl);
-        // ... restante do seu código (onopen, onmessage, etc)
+        const data = await response.json();
+        
+        // 2. Lógica de extração da URL Gigante (Tratando Proxy Integration)
+        let result = data;
+        
+        // Se a Lambda retornar o JSON dentro de uma string 'body' (comum no AWS Proxy)
+        if (data.body && typeof data.body === 'string') {
+            result = JSON.parse(data.body);
+        }
+
+        const urlGigante = result.websocketUrl;
+
+        if (!urlGigante) {
+            console.error("Resposta recebida da AWS:", data);
+            throw new Error("Não foi possível encontrar a websocketUrl no retorno.");
+        }
+
+        // 3. Inicialização do WebSocket com a URL assinada
+        const socket = new WebSocket(urlGigante);
+        socket.binaryType = "arraybuffer";
+
+        socket.onopen = (event) => {
+            console.log("Conectado ao Amazon Transcribe com sucesso!");
+            if (onOpenCallback) onOpenCallback(event);
+        };
+
+        socket.onmessage = (message) => {
+            try {
+                const messageData = JSON.parse(message.data);
+                
+                // Verifica se há transcrição no retorno do stream
+                if (messageData.Transcript && messageData.Transcript.Results.length > 0) {
+                    onMessageCallback(messageData.Transcript.Results[0]);
+                }
+            } catch (e) {
+                console.error("Erro ao processar mensagem do Transcribe:", e);
+            }
+        };
+
+        socket.onclose = (event) => {
+            console.log("Conexão com Transcribe encerrada.");
+            if (onCloseCallback) onCloseCallback(event);
+        };
+
+        socket.onerror = (err) => {
+            console.error("Erro crítico no WebSocket do Transcribe:", err);
+        };
+
+        return socket;
+
+    } catch (err) {
+        console.error("Erro ao conectar Transcribe:", err);
+        return null;
+    }
+}
