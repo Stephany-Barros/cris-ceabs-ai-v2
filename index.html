@@ -9,18 +9,30 @@
 <body>
     <div class="container">
         <div class="logo">CEABS <span style="color:var(--secondary)">CRIS IA</span></div>
+        
         <button class="btn-mic" id="btnAction">🎤</button>
-        <div id="status">Clique para iniciar</div>
+        <div id="status">Clique para iniciar voz</div>
+        
         <div class="chat-box">
-            <div class="label">Você disse:</div>
-            <div class="text-output" id="userText">---</div>
-            <div class="label">Cris respondeu:</div>
-            <div class="text-output" id="crisText">---</div>
+            <div class="label">Interação atual:</div>
+            <div class="text-output">
+                <strong>Você:</strong> <span id="userText">---</span>
+            </div>
+            <div class="text-output">
+                <strong>Cris:</strong> <span id="crisText">---</span>
+            </div>
+        </div>
+
+        <div class="input-group" style="margin-top: 20px; display: flex; gap: 10px;">
+            <input type="text" id="chatInput" placeholder="Ou digite aqui sua dúvida..." 
+                   style="flex-grow: 1; padding: 12px; border-radius: 5px; border: 1px solid var(--secondary); background: rgba(255,255,255,0.05); color: white;">
+            <button id="btnSendChat" style="padding: 10px 20px; cursor: pointer; background: var(--secondary); color: white; border: none; border-radius: 5px; font-weight: bold;">
+                Enviar
+            </button>
         </div>
     </div>
 
     <script src="js/audio-utils.js"></script>
     <script src="js/transcribe.js"></script>
-    <script src="js/app.js"></script>
-</body>
+    <script src="js/chat.js"></script> <script src="js/app.js"></script>   </body>
 </html>
