@@ -86,3 +86,40 @@ body {
     border: 1px solid #eee;
     border-left: 5px solid var(--secondary);
 }
+
+/* --- NOVOS ESTILOS PARA O CHAT DE TEXTO --- */
+
+.input-group {
+    margin-top: 1rem;
+    display: flex;
+    gap: 8px;
+}
+
+#chatInput {
+    flex-grow: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    font-size: 0.9rem;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+#chatInput:focus {
+    border-color: var(--secondary);
+}
+
+#btnSendChat {
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 0 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+
+#btnSendChat:hover {
+    opacity: 0.9;
+}
