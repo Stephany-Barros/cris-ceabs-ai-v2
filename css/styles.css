@@ -20,24 +20,24 @@ body {
     border-radius: 20px;
     box-shadow: 0 15px 35px rgba(0,0,0,0.1);
     text-align: center;
-    width: 380px;
+    width: 400px; /* Aumentei levemente para o chat respirar melhor */
 }
 
 .logo {
     font-weight: 800;
     font-size: 1.6rem;
     color: var(--primary);
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     letter-spacing: -1px;
 }
 
 .btn-mic {
     background: var(--primary);
     border: none;
-    width: 90px;
-    height: 90px;
+    width: 70px; /* Reduzi um pouco para dar mais espaço à janela */
+    height: 70px;
     border-radius: 50%;
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     color: white;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -49,20 +49,22 @@ body {
 }
 
 .btn-mic.active {
-    background: #e74c3c; /* Vermelho quando grava */
-    transform: scale(1.15);
-    box-shadow: 0 0 25px rgba(231, 76, 60, 0.6);
+    background: #e74c3c;
+    transform: scale(1.1);
+    box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
 }
 
 #status {
-    margin-top: 1.5rem;
-    font-size: 0.85rem;
+    margin-top: 1rem;
+    font-size: 0.8rem;
     color: #888;
     font-weight: 500;
 }
 
-.chat-box {
-    margin-top: 2.5rem;
+/* --- JANELA DE CHAT (A "JANELINHA") --- */
+
+.chat-container {
+    margin-top: 1.5rem;
     text-align: left;
 }
 
@@ -75,19 +77,52 @@ body {
     display: block;
 }
 
-.text-output {
-    background: #fdfdfd;
-    padding: 12px 15px;
-    border-radius: 12px;
-    min-height: 45px;
-    margin-bottom: 18px;
-    font-size: 0.95rem;
-    color: #333;
+.chat-window {
+    height: 250px;
+    background: #f9f9f9;
     border: 1px solid #eee;
-    border-left: 5px solid var(--secondary);
+    border-radius: 15px;
+    padding: 15px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-/* --- NOVOS ESTILOS PARA O CHAT DE TEXTO --- */
+/* Balões de Mensagem */
+.message {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.message.user {
+    align-self: flex-end;
+    background: var(--primary);
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.message.cris {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border: 1px solid #eee;
+    border-bottom-left-radius: 2px;
+    border-left: 4px solid var(--secondary);
+}
+
+.message.system {
+    align-self: center;
+    font-size: 0.7rem;
+    color: #bbb;
+    background: transparent;
+}
+
+/* --- ENTRADA DE TEXTO --- */
 
 .input-group {
     margin-top: 1rem;
@@ -117,9 +152,13 @@ body {
     padding: 0 15px;
     cursor: pointer;
     font-weight: 600;
-    transition: opacity 0.3s;
 }
 
-#btnSendChat:hover {
-    opacity: 0.9;
+/* Scrollbar Elegante */
+.chat-window::-webkit-scrollbar {
+    width: 4px;
+}
+.chat-window::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
 }
